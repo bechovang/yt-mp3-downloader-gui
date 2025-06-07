@@ -160,3 +160,69 @@ Nếu bạn muốn, mình có thể:
 * Hướng dẫn đóng gói thành `.exe` Windows
 
 
+
+-------------------------------
+
+
+
+
+Mặc định, khi bạn chạy lệnh `yt-dlp` trong **Command Prompt**, thì file MP3 sẽ được lưu **ngay tại thư mục hiện tại của CMD** – tức là nơi bạn đang đứng trong dòng lệnh.
+
+---
+
+## 📍 **Cách kiểm tra nơi lưu file**
+
+1. Khi bạn mở **cmd**, hãy xem dòng như sau:
+
+   ```cmd
+   C:\Users\Wincy>
+   ```
+
+   👉 Nghĩa là file sẽ được lưu ở thư mục `C:\Users\Wincy`
+
+2. Nếu bạn đã chuyển thư mục bằng lệnh `cd`, ví dụ:
+
+   ```cmd
+   cd C:\yt-dlp
+   ```
+
+   👉 Thì file sẽ được lưu ở `C:\yt-dlp`
+
+---
+
+## ✅ **Cách chỉ định thư mục lưu file**
+
+Bạn có thể thêm tùy chọn `-o` để chọn nơi lưu rõ ràng:
+
+### Ví dụ: lưu vào ổ D, thư mục NhacYT
+
+```cmd
+yt-dlp.exe -f bestaudio --extract-audio --audio-format mp3 -o "D:\NhacYT\%(title)s.%(ext)s" https://youtu.be/dQw4w9WgXcQ
+```
+
+> Nếu thư mục `D:\NhacYT` chưa tồn tại, bạn nên tạo trước.
+
+---
+
+## 🧠 Gợi ý:
+
+Bạn có thể thêm lệnh `explorer .` ngay sau đó để mở thư mục hiện tại trên Windows Explorer:
+
+```cmd
+explorer .
+```
+
+---
+
+Nếu bạn chưa chắc mình đang ở thư mục nào trong CMD, hãy dùng lệnh:
+
+```cmd
+cd
+```
+
+Nó sẽ hiển thị đường dẫn hiện tại.
+
+---
+
+Bạn có muốn mình viết sẵn 1 file `.bat` để bạn chỉ cần **double-click là tải MP3 từ YouTube**?
+
