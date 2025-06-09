@@ -1,228 +1,130 @@
-# yt-mp3-downloader-gui
+# YouTube Audio Downloader (GUI & CLI)
 
+Một ứng dụng đơn giản để tải âm thanh từ các video YouTube, hỗ trợ cả giao diện đồ họa (GUI) và dòng lệnh (CLI).
 
+![Giao diện ứng dụng](https://i.imgur.com/your-screenshot-url.png) <!-- Bạn nên thay thế bằng ảnh chụp màn hình thực tế của ứng dụng -->
 
-## 🧩 MỤC TIÊU ỨNG DỤNG
+## Giới thiệu
 
-* ✅ Nhập link YouTube
-* ✅ Tải về file MP3 chất lượng cao
-* ✅ Lưu tại thư mục do người dùng chọn (hoặc mặc định)
-* ✅ Giao diện dòng lệnh hoặc GUI đơn giản
+Ứng dụng này cho phép bạn nhanh chóng tải về bản âm thanh gốc từ một video YouTube bất kỳ. Bạn có thể dán link video, chọn thư mục lưu và ứng dụng sẽ tự động tải về file âm thanh với chất lượng tốt nhất có sẵn mà không cần chuyển đổi định dạng.
 
----
+## Tính năng
 
-## 🗂️ CẤU TRÚC PROJECT (Dự kiến)
+-   **Giao diện đồ họa (GUI):** Dễ sử dụng với các nút bấm và trường nhập liệu trực quan.
+-   **Giao diện dòng lệnh (CLI):** Dành cho những ai thích làm việc trên terminal.
+-   **Chất lượng gốc:** Tải về file âm thanh chất lượng cao nhất mà YouTube cung cấp.
+-   **Không chuyển đổi:** Giữ nguyên định dạng gốc của audio (thường là `.m4a` hoặc `.webm`), đảm bảo không làm giảm chất lượng.
+-   **Đa nền tảng:** Hoạt động trên Windows, macOS và Linux.
+-   **Tự động mở thư mục:** Sau khi tải xong, ứng dụng sẽ tự động mở thư mục chứa file đã tải.
 
-```
-youtube_mp3_downloader/
-├── main.py
-├── downloader.py
-├── requirements.txt
-└── gui_app.py     # (tuỳ chọn nếu bạn làm GUI)
-```
+## Cài đặt
 
----
+### Yêu cầu
 
-## 📌 STEP-BY-STEP PLANNING
+-   Python 3.6+
+-   `pip` (trình quản lý gói của Python)
+-   `venv` (để tạo môi trường ảo, khuyến khích)
 
-### 🔹 **1. Cài đặt thư viện cần thiết**
+### Các bước cài đặt
 
-Tạo `requirements.txt`:
+1.  **Clone repository này về máy:**
 
-```txt
-yt-dlp
-tkinter        # nếu dùng GUI
-```
+    ```bash
+    git clone https://github.com/your-username/yt-mp3-downloader-gui.git
+    cd yt-mp3-downloader-gui
+    ```
 
-Cài bằng lệnh:
+2.  **Tạo và kích hoạt môi trường ảo (`venv`):**
 
-```bash
-pip install -r requirements.txt
-```
+    *   **Trên Windows:**
+        ```bash
+        python -m venv venv
+        .\venv\Scripts\activate
+        ```
 
----
+    *   **Trên macOS/Linux:**
+        ```bash
+        python3 -m venv venv
+        source venv/bin/activate
+        ```
 
-### 🔹 **2. Viết module tải MP3 – `downloader.py`**
+3.  **Cài đặt các gói cần thiết:**
 
-```python
-import yt_dlp
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-def download_mp3(url: str, output_path: str = "./"):
-    ydl_opts = {
-        'format': 'bestaudio/best',
-        'outtmpl': f'{output_path}/%(title)s.%(ext)s',
-        'postprocessors': [{
-            'key': 'FFmpegExtractAudio',
-            'preferredcodec': 'mp3',
-            'preferredquality': '192',
-        }],
-        'quiet': False,
-        'noplaylist': True,
-    }
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        ydl.download([url])
-```
+## Cách sử dụng
 
----
+Bạn có thể chạy ứng dụng theo hai cách:
 
-### 🔹 **3. Viết giao diện dòng lệnh – `main.py`**
+### 1. Chạy với giao diện đồ họa (GUI)
 
-```python
-from downloader import download_mp3
-
-if __name__ == "__main__":
-    url = input("🔗 Nhập link YouTube cần tải MP3: ")
-    path = input("📁 Nhập thư mục lưu file (Enter để mặc định): ").strip()
-    if not path:
-        path = "."
-
-    try:
-        download_mp3(url, path)
-        print("✅ Tải MP3 thành công!")
-    except Exception as e:
-        print(f"❌ Lỗi: {e}")
-```
-
----
-
-### 🔹 **4. (Tuỳ chọn) Giao diện đồ hoạ đơn giản – `gui_app.py`**
-
-```python
-import tkinter as tk
-from tkinter import filedialog
-from downloader import download_mp3
-
-def browse_folder():
-    path = filedialog.askdirectory()
-    if path:
-        output_path.set(path)
-
-def start_download():
-    try:
-        download_mp3(url_entry.get(), output_path.get())
-        result_label.config(text="✅ Tải thành công!", fg="green")
-    except Exception as e:
-        result_label.config(text=f"❌ Lỗi: {e}", fg="red")
-
-app = tk.Tk()
-app.title("YouTube to MP3 Downloader")
-
-url_label = tk.Label(app, text="YouTube URL:")
-url_label.pack()
-url_entry = tk.Entry(app, width=50)
-url_entry.pack()
-
-output_path = tk.StringVar(value=".")
-folder_btn = tk.Button(app, text="Chọn thư mục lưu", command=browse_folder)
-folder_btn.pack()
-
-download_btn = tk.Button(app, text="Tải MP3", command=start_download)
-download_btn.pack()
-
-result_label = tk.Label(app, text="")
-result_label.pack()
-
-app.mainloop()
-```
-
----
-
-## 🚀 CÁCH CHẠY ỨNG DỤNG
-
-### CLI:
-
-```bash
-python main.py
-```
-
-### GUI:
+Thực thi file `gui_app.py`:
 
 ```bash
 python gui_app.py
 ```
 
----
+Một cửa sổ sẽ hiện lên. Bạn chỉ cần:
+- Dán URL của video YouTube vào ô nhập liệu.
+- (Tùy chọn) Nhấn nút "Chọn thư mục" để thay đổi nơi lưu file. Mặc định, file sẽ được lưu vào thư mục `downloaded_audios_gui`.
+- Nhấn nút "Tải".
 
-## 🎁 GỢI Ý MỞ RỘNG
+### 2. Chạy bằng dòng lệnh (CLI)
 
-* ✅ Hỗ trợ tải playlist
-* ✅ Cho phép chọn định dạng khác (m4a, wav,...)
-* ✅ Giao diện đẹp hơn với PyQt, customtkinter
-* ✅ Cho phép dán link tự động từ clipboard
-* ✅ Gói app thành `.exe` bằng `pyinstaller`
+Thực thi file `main.py`:
 
----
-
-Nếu bạn muốn, mình có thể:
-
-* Nén trọn project mẫu gửi bạn (.zip)
-* Viết thêm tính năng nâng cao
-* Hướng dẫn đóng gói thành `.exe` Windows
-
-
-
--------------------------------
-
-
-
-
-Mặc định, khi bạn chạy lệnh `yt-dlp` trong **Command Prompt**, thì file MP3 sẽ được lưu **ngay tại thư mục hiện tại của CMD** – tức là nơi bạn đang đứng trong dòng lệnh.
-
----
-
-## 📍 **Cách kiểm tra nơi lưu file**
-
-1. Khi bạn mở **cmd**, hãy xem dòng như sau:
-
-   ```cmd
-   C:\Users\Wincy>
-   ```
-
-   👉 Nghĩa là file sẽ được lưu ở thư mục `C:\Users\Wincy`
-
-2. Nếu bạn đã chuyển thư mục bằng lệnh `cd`, ví dụ:
-
-   ```cmd
-   cd C:\yt-dlp
-   ```
-
-   👉 Thì file sẽ được lưu ở `C:\yt-dlp`
-
----
-
-## ✅ **Cách chỉ định thư mục lưu file**
-
-Bạn có thể thêm tùy chọn `-o` để chọn nơi lưu rõ ràng:
-
-### Ví dụ: lưu vào ổ D, thư mục NhacYT
-
-```cmd
-yt-dlp.exe -f bestaudio --extract-audio --audio-format mp3 -o "D:\NhacYT\%(title)s.%(ext)s" https://youtu.be/dQw4w9WgXcQ
+```bash
+python main.py
 ```
 
-> Nếu thư mục `D:\NhacYT` chưa tồn tại, bạn nên tạo trước.
+Ứng dụng sẽ hỏi bạn:
+- Nhập link YouTube.
+- Nhập đường dẫn thư mục lưu file. Nếu bạn bỏ trống, file sẽ được lưu vào thư mục `downloaded_audios`.
 
----
+## Hướng phát triển trong tương lai: Android với Termux
 
-## 🧠 Gợi ý:
+Đây là một dự án có tiềm năng để phát triển thành một công cụ tiện lợi trên các thiết bị Android thông qua **Termux**.
 
-Bạn có thể thêm lệnh `explorer .` ngay sau đó để mở thư mục hiện tại trên Windows Explorer:
+### Tại sao lại là Termux?
 
-```cmd
-explorer .
-```
+**Termux** là một trình giả lập terminal mạnh mẽ cho Android, cho phép chạy các môi trường Linux và các công cụ dòng lệnh trực tiếp trên điện thoại mà không cần root. Điều này mở ra khả năng chạy các script Python như `yt-mp3-downloader-gui` trên Android.
 
----
+### Lộ trình phát triển
 
-Nếu bạn chưa chắc mình đang ở thư mục nào trong CMD, hãy dùng lệnh:
+1.  **Tương thích với Termux:**
+    *   Kiểm tra và đảm bảo các thư viện (`yt-dlp`) hoạt động tốt trên môi trường của Termux.
+    *   Cần cài đặt Python và các gói cần thiết trong Termux:
+        ```bash
+        pkg install python
+        pip install yt-dlp
+        ```
+    *   Phiên bản CLI (`main.py`) sẽ là trọng tâm chính vì Termux không hỗ trợ GUI Tkinter một cách tự nhiên.
 
-```cmd
-cd
-```
+2.  **Tạo script tiện lợi:**
+    *   Viết một script shell (`.sh`) đơn giản để người dùng có thể chạy ứng dụng chỉ bằng một lệnh ngắn gọn trong Termux.
+    *   Script này sẽ tự động điều hướng đến thư mục dự án và thực thi file `main.py`.
 
-Nó sẽ hiển thị đường dẫn hiện tại.
+3.  **Hỗ trợ lưu trữ trên Android:**
+    *   Sử dụng `termux-storage-setup` để cho phép Termux truy cập vào bộ nhớ trong của điện thoại.
+    *   Sửa đổi code để mặc định lưu các file tải về vào các thư mục công cộng như `Download` hoặc `Music` trên điện thoại.
 
----
+4.  **(Nâng cao) Giao diện người dùng đơn giản:**
+    *   Thay vì GUI, có thể xây dựng một giao diện dựa trên text (TUI - Text-based User Interface) bằng các thư viện như `dialog` (thông qua shell script) hoặc các thư viện Python như `whiptail` để làm cho phiên bản CLI thân thiện hơn với người dùng không chuyên.
 
-Bạn có muốn mình viết sẵn 1 file `.bat` để bạn chỉ cần **double-click là tải MP3 từ YouTube**?
+### Ví dụ cách chạy trên Termux (sau khi phát triển)
+
+1.  Mở Termux.
+2.  Chạy script cài đặt (chỉ lần đầu):
+    ```bash
+    sh setup-termux.sh
+    ```
+3.  Chạy ứng dụng:
+    ```bash
+    ./start-downloader.sh
+    ```
+4.  Làm theo hướng dẫn trên màn hình để dán link và tải nhạc.
+
+Đây là một hướng đi rất khả thi để biến một công cụ desktop đơn giản thành một tiện ích di động mạnh mẽ cho người dùng Android.
 

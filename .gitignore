@@ -1,0 +1,28 @@
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+.DS_Store
+.Python
+env/
+venv/
+virtualenv/
+build/
+dist/
+*.egg-info/
+
+# IDE / Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*.tmp
+*.bak
+
+
+#folder video
+downloaded_audios/
+downloaded_audios_gui/
