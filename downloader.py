@@ -23,9 +23,11 @@ def download_audio(url: str, output_path: str = "."):
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             print(f"Đang tải file âm thanh gốc từ: {url}")
-            ydl.download([url])
-        print(f"✅ Đã tải thành công và lưu tại: {output_path}")
-        return True, "Tải âm thanh thành công!"
+            info_dict = ydl.extract_info(url, download=True)
+            filename = ydl.prepare_filename(info_dict)
+            base_filename = os.path.basename(filename)
+            print(f"✅ Đã tải thành công '{base_filename}' và lưu tại: {output_path}")
+            return True, base_filename
     except yt_dlp.utils.DownloadError as e:
         print(f"❌ Lỗi tải xuống từ yt-dlp: {e}")
         return False, f"Lỗi tải xuống: Video không khả dụng hoặc link không hợp lệ."
