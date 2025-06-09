@@ -27,6 +27,8 @@ Một ứng dụng đơn giản để tải âm thanh từ các video YouTube, h
 
 ### Các bước cài đặt
 
+0. tải python 3.10.9
+
 1.  **Clone repository này về máy:**
 
     ```bash
